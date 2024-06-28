@@ -1,2 +1,0 @@
-# openmusic
-project dicoding
