@@ -1,0 +1,29 @@
+{
+  "name": "openmusic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "lint": "eslint ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ignatiusbarry69/openmusic.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ignatiusbarry69/openmusic/issues"
+  },
+  "homepage": "https://github.com/ignatiusbarry69/openmusic#readme",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.10"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "nodemon": "^3.1.4"
+  }
+}
