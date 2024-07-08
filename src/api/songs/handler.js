@@ -1,4 +1,4 @@
-const ClientError = require("../../exceptions/ClientError");
+const ClientError = require("../../exceptions/ClientError.js");
 
 class SongHandler {
   constructor(service, validator) {
@@ -37,7 +37,9 @@ class SongHandler {
       return h
         .response({
           status: "success",
-          data: { songId },
+          data: {
+            songId,
+          },
         })
         .code(201);
     } catch (error) {
@@ -54,30 +56,30 @@ class SongHandler {
       return h
         .response({
           status: "error",
-          message: "derrrrrrrrrrrr",
+          message: "Unlucky, try again later.",
         })
         .code(500);
     }
   }
+
   async getSongsHandler(request, h) {
     try {
-      const query = request.query || {};
-      const title = query.title || null;
-      const performer = query.performer || null;
+      const { title = null, performer = null } = request.query;
       const songs = await this._service.getSongs(title, performer);
-
       return {
         status: "success",
-        data: { songs },
+        data: {
+          songs,
+        },
       };
     } catch (error) {
-      const response = h.response({
-        status: "error",
-        message: "Maaf, terjadi kesalahan pada server",
-      });
-      response.code(500);
       console.error(error);
-      return response;
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
 
@@ -88,28 +90,30 @@ class SongHandler {
 
       return {
         status: "success",
-        data: { song },
+        data: {
+          song,
+        },
       };
     } catch (error) {
       console.error(error);
-
       if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
-      } else {
-        const response = h.response({
-          status: "error",
-          message: "duarr",
-        });
-        response.code(500);
-        return response;
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
       }
+
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
+
   async putSongByIdHandler(request, h) {
     try {
       this._validator.validateSongPayload(request.payload);
@@ -134,28 +138,27 @@ class SongHandler {
 
       return {
         status: "success",
-        message: "Lagu berhasil diperbarui",
+        message: "Musik berhasil diperbarui",
       };
     } catch (error) {
-      console.error(error);
-
       if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
-      } else {
-        const response = h.response({
-          status: "error",
-          message: "duuuuarrrrr",
-        });
-        response.code(500);
-        return response;
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
       }
+
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
+
   async deleteSongByIdHandler(request, h) {
     try {
       const { id } = request.params;
@@ -164,11 +167,9 @@ class SongHandler {
 
       return {
         status: "success",
-        message: "Lagu berhasil dihapus",
+        message: "Musik berhasil dihapus",
       };
     } catch (error) {
-      console.error(error);
-
       if (error instanceof ClientError) {
         return h
           .response({
@@ -176,15 +177,16 @@ class SongHandler {
             message: error.message,
           })
           .code(error.statusCode);
-      } else {
-        return h
-          .response({
-            status: "error",
-            message: "jeduaarrr",
-          })
-          .code(500);
       }
+
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
 }
+
 module.exports = SongHandler;

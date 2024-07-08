@@ -1,11 +1,12 @@
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
 const Hapi = require("@hapi/hapi");
 const albums = require("./api/albums/index.js");
 const songs = require("./api/songs/index.js");
-const AlbumService = require("./services/AlbumService.js");
+const AlbumService = require("./services/postgres/AlbumService.js");
 const AlbumValidator = require("./validator/albums/index.js");
-const SongService = require("./services/SongService.js");
+const SongService = require("./services/postgres/SongService.js");
 const SongValidator = require("./validator/songs/index.js");
 
 const init = async () => {
@@ -40,7 +41,7 @@ const init = async () => {
   ]);
 
   await server.start();
-  console.log(`Server running pada ${server.info.uri}`);
+  console.log(`Server berjalan pada ${server.info.uri}`);
 };
 
 init();

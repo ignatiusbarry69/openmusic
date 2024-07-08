@@ -15,16 +15,15 @@ class AlbumHandler {
     try {
       this._validator.validateAlbumPayload(request.payload);
 
-      const payload = request.payload || {};
-      const name = payload.name || null;
-      const year = payload.year || null;
-
+      const { name, year } = request.payload;
       const albumId = await this._service.addAlbum({ name, year });
 
       return h
         .response({
           status: "success",
-          data: { albumId },
+          data: {
+            albumId,
+          },
         })
         .code(201);
     } catch (error) {
@@ -41,7 +40,7 @@ class AlbumHandler {
       return h
         .response({
           status: "error",
-          message: "dddddduarrrrrghasda",
+          message: "Unlucky, try again later",
         })
         .code(500);
     }
@@ -52,24 +51,30 @@ class AlbumHandler {
       const { id } = request.params;
       const album = await this._service.getAlbumById(id);
 
-      return h.response({
+      return {
         status: "success",
         data: {
           album,
         },
-      });
+      };
     } catch (error) {
       console.error(error);
-      const statusCode = error instanceof ClientError ? error.statusCode : 500;
-      const errorMessage =
-        error instanceof ClientError ? error.message : "ctarrrrr";
+
+      if (error instanceof ClientError) {
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
+      }
 
       return h
         .response({
-          status: error instanceof ClientError ? "fail" : "error",
-          message: errorMessage,
+          status: "error",
+          message: "Unlucky, try again later",
         })
-        .code(statusCode);
+        .code(500);
     }
   }
 
@@ -82,22 +87,26 @@ class AlbumHandler {
 
       await this._service.editAlbumById(id, { name, year });
 
-      return h.response({
+      return {
         status: "success",
         message: "Album berhasil diperbarui",
-      });
+      };
     } catch (error) {
-      console.error(error);
-      const statusCode = error instanceof ClientError ? error.statusCode : 500;
-      const errorMessage =
-        error instanceof ClientError ? error.message : "dorrrrrr";
+      if (error instanceof ClientError) {
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
+      }
 
       return h
         .response({
-          status: error instanceof ClientError ? "fail" : "error",
-          message: errorMessage,
+          status: "error",
+          message: "Unlucky, try again later",
         })
-        .code(statusCode);
+        .code(500);
     }
   }
 
@@ -107,24 +116,27 @@ class AlbumHandler {
 
       await this._service.deleteAlbumById(id);
 
-      return h.response({
+      return {
         status: "success",
         message: "Album berhasil dihapus",
-      });
+      };
     } catch (error) {
       console.error(error);
-      const statusCode = error instanceof ClientError ? error.statusCode : 500;
-      const errorMessage =
-        error instanceof ClientError
-          ? error.message
-          : "dduarrrrrrrrrrrrrrrdhgh";
+      if (error instanceof ClientError) {
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
+      }
 
       return h
         .response({
-          status: error instanceof ClientError ? "fail" : "error",
-          message: errorMessage,
+          status: "error",
+          message: "Unlucky, try again later.",
         })
-        .code(statusCode);
+        .code(500);
     }
   }
 }
