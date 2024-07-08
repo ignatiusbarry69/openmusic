@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 const ClientError = require("./ClientError.js");
 
 class NotFoundError extends ClientError {
