@@ -1,10 +1,8 @@
-const pg = require("pg");
+const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
 const InvariantError = require("../../exceptions/InvariantError.js");
 const NotFoundError = require("../../exceptions/NotFoundError.js");
 const AuthorizationError = require("../../exceptions/AuthorizationError.js");
-
-const { Pool } = pg;
 
 class PlaylistsService {
   constructor(collaborationsService) {
@@ -62,7 +60,7 @@ class PlaylistsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError("Playlist tidak ditemukan");
+      throw new NotFoundError("Playlist tidak berhasil ditemukan");
     }
 
     return result.rows[0];
@@ -91,7 +89,7 @@ class PlaylistsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new InvariantError("Musik gagal ditambahkan kedalam playlist");
+      throw new InvariantError("Gagal menambahkan lagu kedalam playlist");
     }
   }
 
@@ -145,7 +143,7 @@ class PlaylistsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new InvariantError("Musik gagal dihapus dari playlist");
+      throw new InvariantError("Gagal menghapus lagu dari playlist");
     }
   }
 

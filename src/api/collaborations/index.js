@@ -1,21 +1,21 @@
 const routes = require("./routes.js");
 const CollaborationsHandler = require("./handler.js");
 
-const collaborationsPlugin = {
+const collaborationPlugin = {
   name: "collaborations",
   version: "1.0.0",
   register: async function (
     server,
-    { collaborationsService, playlistsService, usersService, validator }
+    { collaborationService, playlistService, userService, validator }
   ) {
     const collaborationHandler = new CollaborationsHandler(
-      collaborationsService,
-      playlistsService,
-      usersService,
+      collaborationService,
+      playlistService,
+      userService,
       validator
     );
     server.route(routes(collaborationHandler));
   },
 };
 
-module.exports = collaborationsPlugin;
+module.exports = collaborationPlugin;

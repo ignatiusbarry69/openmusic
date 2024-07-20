@@ -1,9 +1,9 @@
 const ClientError = require("../../exceptions/ClientError.js");
 
-class AuthenticationsHandler {
-  constructor(authenticationsService, usersService, tokenManager, validator) {
+class AuthenticationHandler {
+  constructor(authenticationsService, userService, tokenManager, validator) {
     this._authenticationsService = authenticationsService;
-    this._usersService = usersService;
+    this._userService = userService;
     this._tokenManager = tokenManager;
     this._validator = validator;
 
@@ -18,7 +18,7 @@ class AuthenticationsHandler {
       this._validator.validatePostAuthenticationPayload(request.payload);
 
       const { username, password } = request.payload;
-      const id = await this._usersService.verifyUserCredential(
+      const id = await this._userService.verifyUserCredential(
         username,
         password
       );
@@ -28,33 +28,33 @@ class AuthenticationsHandler {
 
       await this._authenticationsService.addRefreshToken(refreshToken);
 
-      const response = h.response({
-        status: "success",
-        message: "Authentication berhasil ditambahkan",
-        data: {
-          accessToken,
-          refreshToken,
-        },
-      });
-      response.code(201);
-      return response;
+      return h
+        .response({
+          status: "success",
+          message: "Authentication berhasil ditambahkan",
+          data: {
+            accessToken,
+            refreshToken,
+          },
+        })
+        .code(201);
     } catch (error) {
+      console.error(error);
       if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
       }
 
-      const response = h.response({
-        status: "error",
-        message: "Maaf, terjadi kesalahan pada server",
-      });
-      response.code(500);
-      console.error(error);
-      return response;
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
 
@@ -69,28 +69,28 @@ class AuthenticationsHandler {
       const accessToken = this._tokenManager.generateAccessToken({ id });
       return {
         status: "success",
-        message: "Access Token berhasil diperbarui",
+        message: "Berhasil memperbarui Access Token ",
         data: {
           accessToken,
         },
       };
     } catch (error) {
+      console.error(error);
       if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
       }
 
-      const response = h.response({
-        status: "error",
-        message: "Maaf, terjadi kesalahan pada server",
-      });
-      response.code(500);
-      console.error(error);
-      return response;
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
 
@@ -107,24 +107,24 @@ class AuthenticationsHandler {
         message: "Refresh Token berhasil dihapus",
       };
     } catch (error) {
+      console.error(error);
       if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
       }
 
-      const response = h.response({
-        status: "error",
-        message: "Maaf, terjadi kesalahan pada server",
-      });
-      response.code(500);
-      console.error(error);
-      return response;
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
 }
 
-module.exports = AuthenticationsHandler;
+module.exports = AuthenticationHandler;

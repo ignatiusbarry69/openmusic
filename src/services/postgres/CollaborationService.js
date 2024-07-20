@@ -1,9 +1,8 @@
-const pg = require("pg");
 const { nanoid } = require("nanoid");
 const InvariantError = require("../../exceptions/InvariantError.js");
 const AuthorizationError = require("../../exceptions/AuthorizationError.js");
 
-const { Pool } = pg;
+const { Pool } = require("pg");
 
 class CollaborationsService {
   constructor() {

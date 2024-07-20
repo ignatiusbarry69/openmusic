@@ -1,15 +1,10 @@
 const ClientError = require("../../exceptions/ClientError.js");
 
-class CollaborationsHandler {
-  constructor(
-    collaborationsService,
-    playlistsService,
-    usersService,
-    validator
-  ) {
-    this._collaborationsService = collaborationsService;
-    this._playlistsService = playlistsService;
-    this._usersService = usersService;
+class CollaborationHandler {
+  constructor(collaborationService, playlistService, userService, validator) {
+    this._collaborationService = collaborationService;
+    this._playlistService = playlistService;
+    this._userService = userService;
     this._validator = validator;
 
     this.postCollaborationHandler = this.postCollaborationHandler.bind(this);
@@ -24,40 +19,38 @@ class CollaborationsHandler {
       const { id: credentialId } = request.auth.credentials;
       const { playlistId, userId } = request.payload;
 
-      await this._playlistsService.verifyPlaylistOwner(
+      await this._playlistService.verifyPlaylistOwner(playlistId, credentialId);
+      await this._userService.getUserById(userId);
+
+      const collaborationId = await this._collaborationService.addCollaboration(
         playlistId,
-        credentialId
+        userId
       );
-      await this._usersService.getUserById(userId);
 
-      const collaborationId =
-        await this._collaborationsService.addCollaboration(playlistId, userId);
-
-      const response = h.response({
-        status: "success",
-        data: {
-          collaborationId,
-        },
-      });
-      response.code(201);
-      return response;
+      return h
+        .response({
+          status: "success",
+          data: {
+            collaborationId,
+          },
+        })
+        .code(201);
     } catch (error) {
-      if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
-      }
-
-      const response = h.response({
-        status: "error",
-        message: "Maaf, terjadi kesalahan pada server",
-      });
-      response.code(500);
       console.error(error);
-      return response;
+      if (error instanceof ClientError) {
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
+      }
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
 
@@ -68,35 +61,32 @@ class CollaborationsHandler {
       const { id: credentialId } = request.auth.credentials;
       const { playlistId, userId } = request.payload;
 
-      await this._playlistsService.verifyPlaylistOwner(
-        playlistId,
-        credentialId
-      );
-      await this._collaborationsService.deleteCollaboration(playlistId, userId);
+      await this._playlistService.verifyPlaylistOwner(playlistId, credentialId);
+      await this._collaborationService.deleteCollaboration(playlistId, userId);
 
       return {
         status: "success",
-        message: "Kolaborasi berhasil dihapus",
+        message: "Berhasil menghapus kolaborasi",
       };
     } catch (error) {
+      console.error(error);
       if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
       }
 
-      const response = h.response({
-        status: "error",
-        message: "Maaf, terjadi kesalahan pada server",
-      });
-      response.code(500);
-      console.error(error);
-      return response;
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
 }
 
-module.exports = CollaborationsHandler;
+module.exports = CollaborationHandler;

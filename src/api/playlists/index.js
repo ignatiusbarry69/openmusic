@@ -1,15 +1,15 @@
 const routes = require("./routes.js");
-const PlaylistsHandler = require("./handler.js");
+const PlaylistHandler = require("./handler.js");
 
-const playlistsPlugin = {
+const playlistPlugin = {
   name: "playlists",
   version: "1.0.0",
   register: async function (
     server,
-    { playlistsService, songService, validator }
+    { playlistService, songService, validator }
   ) {
-    const playlistHandler = new PlaylistsHandler(
-      playlistsService,
+    const playlistHandler = new PlaylistHandler(
+      playlistService,
       songService,
       validator
     );
@@ -17,4 +17,4 @@ const playlistsPlugin = {
   },
 };
 
-module.exports = playlistsPlugin;
+module.exports = playlistPlugin;

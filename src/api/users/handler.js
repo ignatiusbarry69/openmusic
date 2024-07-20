@@ -1,6 +1,6 @@
 const ClientError = require("../../exceptions/ClientError.js");
 
-class UsersHandler {
+class UserHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
@@ -20,34 +20,34 @@ class UsersHandler {
         fullname,
       });
 
-      const response = h.response({
-        status: "success",
-        message: "User berhasil ditambahkan",
-        data: {
-          userId,
-        },
-      });
-      response.code(201);
-      return response;
+      return h
+        .response({
+          status: "success",
+          message: "User berhasil ditambahkan",
+          data: {
+            userId,
+          },
+        })
+        .code(201);
     } catch (error) {
+      console.error(error);
       if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
+        return h
+          .response({
+            status: "fail",
+            message: error.message,
+          })
+          .code(error.statusCode);
       }
 
-      const response = h.response({
-        status: "error",
-        message: "Maaf, terjadi kesalahan pada server",
-      });
-      response.code(500);
-      console.error(error);
-      return response;
+      return h
+        .response({
+          status: "error",
+          message: "Unlucky, try again later.",
+        })
+        .code(500);
     }
   }
 }
 
-module.exports = UsersHandler;
+module.exports = UserHandler;
