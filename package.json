@@ -1,22 +1,37 @@
 {
   "name": "openmusic",
   "version": "1.0.0",
-  "description": "ajar be node",
+  "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/server.js",
+    "lint": "eslint ./",
+    "migrate": "node-pg-migrate"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ignatiusbarry69/openmusic.git"
   },
-  "author": "Ignatius Barry Santoso",
-  "license": "MIT",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/ignatiusbarry69/openmusic/issues"
   },
   "homepage": "https://github.com/ignatiusbarry69/openmusic#readme",
   "dependencies": {
-    "@hapi/hapi": "^21.3.10"
+    "@hapi/hapi": "^21.3.10",
+    "@hapi/jwt": "^3.2.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "joi": "^17.13.3",
+    "nanoid": "^3.1.20",
+    "node-pg-migrate": "^7.5.2",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "nodemon": "^3.1.4"
   }
 }
