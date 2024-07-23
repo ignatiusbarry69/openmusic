@@ -30,6 +30,8 @@ const _exports = require("./api/exports");
 const ProducerService = require("./services/rabbitmq/ProducerService"); //no need use new because its object not a class
 const ExportsValidator = require("./validator/exports");
 
+const StorageService = require("./services/s3/StorageService");
+
 const init = async () => {
   const albumService = new AlbumService();
   const songService = new SongService();
@@ -37,6 +39,7 @@ const init = async () => {
   const authenticationService = new AuthenticationService();
   const collaborationService = new CollaborationService();
   const playlistService = new PlaylistService(collaborationService);
+  const storageService = new StorageService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -74,7 +77,8 @@ const init = async () => {
     {
       plugin: albums,
       options: {
-        service: albumService,
+        albumService,
+        storageService,
         validator: AlbumValidator,
       },
     },

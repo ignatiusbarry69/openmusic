@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/ignatiusbarry69/openmusic#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.617.0",
+    "@aws-sdk/s3-request-presigner": "^3.617.0",
     "@hapi/hapi": "^21.3.10",
     "@hapi/jwt": "^3.2.0",
     "amqplib": "^0.10.4",
