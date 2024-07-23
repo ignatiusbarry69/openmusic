@@ -26,6 +26,10 @@ const CollaborationService = require("./services/postgres/CollaborationService.j
 
 const TokenManager = require("./tokenize/TokenManager.js");
 
+const _exports = require("./api/exports");
+const ProducerService = require("./services/rabbitmq/ProducerService"); //no need use new because its object not a class
+const ExportsValidator = require("./validator/exports");
+
 const init = async () => {
   const albumService = new AlbumService();
   const songService = new SongService();
@@ -112,6 +116,14 @@ const init = async () => {
         playlistService,
         userService,
         validator: CollaborationsValidator,
+      },
+    },
+    {
+      plugin: _exports,
+      options: {
+        exportsService: ProducerService,
+        playlistService,
+        validator: ExportsValidator,
       },
     },
   ]);
