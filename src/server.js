@@ -32,13 +32,20 @@ const ExportsValidator = require("./validator/exports");
 
 const StorageService = require("./services/s3/StorageService");
 
+const CacheService = require("./services/redis/CacheService.js");
+
 const init = async () => {
-  const albumService = new AlbumService();
+  const cacheService = new CacheService();
+
+  const albumService = new AlbumService(cacheService);
   const songService = new SongService();
   const userService = new UserService();
   const authenticationService = new AuthenticationService();
-  const collaborationService = new CollaborationService();
-  const playlistService = new PlaylistService(collaborationService);
+  const collaborationService = new CollaborationService(cacheService);
+  const playlistService = new PlaylistService(
+    collaborationService,
+    cacheService
+  );
   const storageService = new StorageService();
 
   const server = Hapi.server({
