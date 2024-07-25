@@ -67,9 +67,7 @@ class PlaylistHandler {
 
       return {
         status: "success",
-        data: {
-          playlists,
-        },
+        data: playlists,
       };
     } catch (error) {
       console.error(error);
